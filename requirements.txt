@@ -1,0 +1,14 @@
+pandas==2.2.3
+zipfile
+os
+rarfile
+logging
+numpy
+matplotlib
+seaborn
+subprocess
+datetime
+sklearn
+duckdb
+pathlib
+sqlalchemy
