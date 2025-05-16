@@ -1,4 +1,11 @@
+__pycache__
+
 venv/
 env/
 extraido/
+
+*.parquet
 *.zip
+*.csv
+*.txt
+*.7z
