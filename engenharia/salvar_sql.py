@@ -6,6 +6,26 @@ from utils import registrar_execucao
 
 @registrar_execucao
 def salvar_sql(pasta):
+    """
+    Salva os dados processados em uma tabela de banco de dados PostgreSQL.
+
+    Lê um arquivo Parquet contendo dados processados (com atributos) e os insere
+    em uma tabela do PostgreSQL, substituindo os dados existentes.
+
+    Args:
+        pasta (str): Caminho da pasta base contendo o arquivo '2.atributos.parquet'
+            que será carregado para o banco de dados.
+
+    Returns:
+        None: A função não retorna valores, mas realiza a inserção dos dados
+        na tabela especificada do PostgreSQL.
+
+    Example:
+        >>> salvar_sql('dados/processados')
+        # Lê 'dados/processados/2.atributos.parquet' e salva na tabela
+        # 'new_new_covid' do PostgreSQL
+    """
+
     nome_arquivo = f'{pasta}/1.limpo.parquet'
     logging.info(f"Lendo {nome_arquivo}")
 
