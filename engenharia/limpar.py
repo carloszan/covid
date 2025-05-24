@@ -46,8 +46,6 @@ def _suavizar(df, window_size=3, threshold=2):
     # Replace outliers with previous day's value
     df_smoothed['novos_casos_novos'] = df['novos_casos_novos'].where(
         ~is_outlier, df['novos_casos_novos'].shift(1))
-    df_smoothed['novos_casos_novos'] = df['novos_casos_novos'].where(
-        ~is_outlier, df['novos_casos_novos'].shift(1))
 
     # For the first row (no previous value), use the next value if available
     if is_outlier.iloc[0] and len(df) > 1:
@@ -76,7 +74,7 @@ def _recalcula_casos_acumulados(df):
         # Adiciona coluna com total acumulado de casos
     """
     new_df = df.copy()
-    new_df['novos_casos_acumulados'] = new_df['casosNovos'].cumsum()
+    new_df['novos_casos_acumulados'] = new_df['novos_casos_novos'].cumsum()
     return new_df
 
 
