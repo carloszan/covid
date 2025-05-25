@@ -26,7 +26,7 @@ def _remover_colunas(df):
     """
     novo_df = df.copy()
     return novo_df.drop(columns=["Recuperadosnovos",
-                                 "emAcompanhamentoNovos"], inplace=True)
+                                 "emAcompanhamentoNovos"])
 
 
 def _obter_estacao(data):

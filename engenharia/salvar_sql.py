@@ -26,10 +26,10 @@ def salvar_sql(pasta):
         # 'new_new_covid' do PostgreSQL
     """
 
-    nome_arquivo = f'{pasta}/1.limpo.parquet'
+    nome_arquivo = f'{pasta}/2.atributos.parquet'
     logging.info(f"Lendo {nome_arquivo}")
 
-    df = pd.read_parquet(f'{pasta}/2.atributos.parquet')
+    df = pd.read_parquet(nome_arquivo)
 
     logging.info("Lido")
 
