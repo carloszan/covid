@@ -163,6 +163,9 @@ def _adicionar_feature_datas(df):
             - dia_semana: dia da semana em inglês
             - dia_semana_traduzido: dia da semana em português
             - estacao: estação do ano
+            - ano: ano extraído da data
+            - mes_numerico: número do mês (1-12)
+            - dia_semana_numerico: número do dia da semana (0-6, onde 0 é segunda)
 
     Example:
         >>> df = pd.DataFrame({'data': pd.to_datetime(['2023-01-15', '2023-07-20'])})
@@ -171,11 +174,14 @@ def _adicionar_feature_datas(df):
     """
     novo_df = df.copy()
 
+    novo_df["ano"] = novo_df.data.dt.year
     novo_df["mes"] = novo_df.data.dt.month_name()
+    novo_df["mes_numerico"] = novo_df.data.dt.month
     novo_df["mes_traduzido"] = novo_df["mes"].apply(_traduzir_mes)
     novo_df["dia_semana"] = novo_df.data.dt.day_name()
     novo_df["dia_semana_traduzido"] = novo_df["dia_semana"].apply(
         _traduzir_dias_da_semana)
+    novo_df["dia_semana_numerico"] = novo_df.data.dt.day_of_week
     novo_df["estacao"] = novo_df["data"].apply(_obter_estacao)
 
     return novo_df
