@@ -2,6 +2,17 @@ from tqdm import tqdm
 import logging
 import pandas as pd
 from utils import registrar_execucao
+from sklearn.preprocessing import StandardScaler
+
+
+def _remover_por_zscore(df):
+    scaler = StandardScaler()
+    LIMITE_COMUM = 1
+
+    df["z_score"] = scaler.fit_transform(df[['novos_casos_novos']])
+    df_sem_outliers = df[abs(df["z_score"]) < LIMITE_COMUM]
+
+    return df_sem_outliers
 
 
 def _suavizar(df, window_size=3, threshold=2):
@@ -99,6 +110,7 @@ def _limpar(df):
         # Retorna o DataFrame após suavização e cálculo de acumulados
     """
     df = _suavizar(df)
+    df = _remover_por_zscore(df)
     df = _recalcula_casos_acumulados(df)
     return df
 
