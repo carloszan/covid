@@ -22,13 +22,16 @@ CONNECTION_STRING = 'postgresql://root:dietpi@192.168.3.200:5432/new_covid'
 ```
 def main():
     pasta = 'dados'
-    nome_lote = '05-09-2025'
+    nome_lote = '05-09-2025' # ESCOLHA O NOME DO LOTE
 
     agrupar(pasta, nome_lote)
     limpar(pasta)
     computar_atributos(pasta)
     # salvar_sql(pasta) # COMENTE ESSA LINHA
 ```
+
+- Troque o paramêtro nome_lote se caso for necessário.
+  - `nome_lote` é o nome da pasta a ser processado, dentro de `engenharia/dados/raw/[nome_lote]`.
 
 ## Execução
 ```
