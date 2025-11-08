@@ -1,6 +1,7 @@
 # Projeto
 
 Esse código é a parte técnica do meu projeto de mestrado, com o título: `Um arcabouço computacional para monitoramento epidemiológico: caso de estudo Covid-19`.
+
 O texto se encontra na pasta `docs/dissertacao.pdf`.
 
 # Como carregar os dados
