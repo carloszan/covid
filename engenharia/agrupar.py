@@ -5,7 +5,7 @@ from utils import registrar_execucao
 
 
 @registrar_execucao
-def agrupar(pasta):
+def agrupar(pasta, nome_lote):
     """
     Agrupa arquivos CSV de um diretório em um único arquivo Parquet.
 
@@ -20,7 +20,7 @@ def agrupar(pasta):
         None: A função não retorna valores, mas salva um arquivo Parquet no diretório especificado.
 
     Example:
-        >>> agrupar('dados/entrada')
+        >>> agrupar('dados/entrada', '01-01-2027')
         # Isso irá ler todos os CSVs em 'dados/entrada/raw/',
         # combinar em um DataFrame e salvar como 'dados/entrada/0.raw.parquet'
     """
@@ -28,7 +28,7 @@ def agrupar(pasta):
     logging.info(f"Processo {__name__} iniciado")
     df = pd.DataFrame()
 
-    directory_path = Path(f'{pasta}/raw')
+    directory_path = Path(f'{pasta}/raw/{nome_lote}')
     files = [f for f in directory_path.iterdir() if f.is_file()
              and f.name != ".gitkeep"]
 

@@ -15,8 +15,9 @@ logging.basicConfig(
 
 def main():
     pasta = 'dados'
+    nome_lote = '05-09-2025'
 
-    agrupar(pasta)
+    agrupar(pasta, nome_lote)
     limpar(pasta)
     computar_atributos(pasta)
     salvar_sql(pasta)

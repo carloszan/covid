@@ -9,59 +9,34 @@ def _remover_por_zscore(df):
     scaler = StandardScaler()
     LIMITE_COMUM = 1
 
-    df["z_score"] = scaler.fit_transform(df[['novos_casos_novos']])
+    df["z_score"] = scaler.fit_transform(df[['casosNovos']])
     df_sem_outliers = df[abs(df["z_score"]) < LIMITE_COMUM]
 
     return df_sem_outliers
 
 
-def _suavizar(df, window_size=3, threshold=2):
+def _suavizar(df, window_size=7, threshold=2):
     """
-    Aplica suavização estatística para remover outliers em séries temporais de casos novos.
+    Smooth data by rolling mean.
+    Df must be indexed.
 
-    Utiliza uma abordagem de média móvel para identificar e corrigir valores atípicos:
-    1. Calcula média e desvio padrão em janela móvel
-    2. Identifica outliers como valores fora do intervalo (média ± threshold*desvio padrão)
-    3. Substitui outliers pelo valor do dia anterior (ou próximo, para o primeiro registro)
-
-    Args:
-        df (pd.DataFrame): DataFrame contendo a coluna 'casosNovos' com os dados originais
-        window_size (int, optional): Tamanho da janela para cálculo da média móvel. Default=3
-        threshold (int, optional): Número de desvios padrão para definir outliers. Default=2
+    Parameters:
+    - df: pandas DataFrame with columns 'date' and 'casosNovos'
+    - window_size: number of days to consider in rolling window
+    - threshold: number of standard deviations to use for outlier detection
 
     Returns:
-        pd.DataFrame: DataFrame com nova coluna 'novos_casos_novos' contendo os valores suavizados
-
-    Example:
-        >>> df_suavizado = _suavizar(df_original)
-        >>> df_suavizado = _suavizar(df_original, window_size=5, threshold=3)
+    - DataFrame with smoothed values
     """
     # Make a copy to avoid modifying original data
     df_smoothed = df.copy()
 
-    df['novos_casos_novos'] = df['casosNovos']
-
     # Calculate rolling statistics
-    rolling_mean = df['novos_casos_novos'].rolling(
-        window=window_size, center=True, min_periods=1).mean()
-    rolling_std = df['novos_casos_novos'].rolling(
-        window=window_size, center=True, min_periods=1).std()
+    rolling_mean = df['casosNovos'].rolling(
+        window=window_size, center=False, closed='left').mean()
 
-    # Identify outliers (values outside mean ± threshold*std)
-    lower_bound = rolling_mean - threshold * rolling_std
-    upper_bound = rolling_mean + threshold * rolling_std
-
-    is_outlier = (df['novos_casos_novos'] < lower_bound) | (
-        df['novos_casos_novos'] > upper_bound)
-
-    # Replace outliers with previous day's value
-    df_smoothed['novos_casos_novos'] = df['novos_casos_novos'].where(
-        ~is_outlier, df['novos_casos_novos'].shift(1))
-
-    # For the first row (no previous value), use the next value if available
-    if is_outlier.iloc[0] and len(df) > 1:
-        df_smoothed.iloc[0, df_smoothed.columns.get_loc(
-            'novos_casos_novos')] = df['novos_casos_novos'].iloc[1]
+    df_smoothed['novos_casos_novos'] = pd.concat(
+        [df['casosNovos'][0:window_size], rolling_mean[window_size:]])
 
     return df_smoothed
 
@@ -109,8 +84,8 @@ def _limpar(df):
         >>> df_limpo = _limpar(df_original)
         # Retorna o DataFrame após suavização e cálculo de acumulados
     """
-    df = _suavizar(df)
     df = _remover_por_zscore(df)
+    df = _suavizar(df)
     df = _recalcula_casos_acumulados(df)
     return df
 
@@ -197,7 +172,15 @@ def limpar(pasta):
 
     logging.info("Lido")
 
+    logging.info(f"TAMANHO ANTES DO DF: {len(df)}")
+
     processado_df = _processar(df)
+
+    logging.info(f"TAMANHO DEPOIS DO DF: {len(processado_df)}")
+
+    diferenca = len(df) - len(processado_df)
+    logging.info(f"DIFERENÇA: {diferenca}")
+    logging.info(f"PORCENTAGEM: {diferenca / len(df)}")
 
     name_file = f'{pasta}/1.limpo.parquet'
     processado_df.to_parquet(name_file, index=False)
