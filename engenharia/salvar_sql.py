@@ -3,6 +3,8 @@ from sqlalchemy import create_engine
 import pandas as pd
 from utils import registrar_execucao
 
+CONNECTION_STRING = 'postgresql://root:dietpi@192.168.3.200:5432/new_covid'
+
 
 @registrar_execucao
 def salvar_sql(pasta):
@@ -33,8 +35,7 @@ def salvar_sql(pasta):
 
     logging.info("Lido")
 
-    engine = create_engine(
-        'postgresql://root:dietpi@192.168.3.200:5432/new_covid')
+    engine = create_engine(CONNECTION_STRING)
 
     logging.info("Salvando no banco Postgres")
 

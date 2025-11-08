@@ -68,10 +68,6 @@ def _limpar(df):
     """
     Executa o pipeline completo de limpeza e processamento dos dados.
 
-    Realiza sequencialmente as seguintes operações:
-    1. Suaviza os dados para remoção de outliers
-    2. Recalcula os casos acumulados com base nos dados suavizados
-
     Args:
         df (pd.DataFrame): DataFrame original a ser processado, deve conter a coluna 'casosNovos'.
 
